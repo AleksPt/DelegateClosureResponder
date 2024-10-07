@@ -5,4 +5,8 @@
 //  Created by Алексей on 07.10.2024.
 //
 
-import Foundation
+import UIKit
+
+protocol MainViewDelegate: AnyObject {
+    func changeColor()
+}

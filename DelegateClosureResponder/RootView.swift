@@ -8,9 +8,9 @@
 import UIKit
 
 final class RootView: UIView {
-    
+            
     // MARK: - UI
-    private let mainView = MainView()
+    let mainView = MainView()
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -24,18 +24,19 @@ final class RootView: UIView {
         fatalError()
     }
     
+    // MARK: - Private methods
     private func setupView() {
         translatesAutoresizingMaskIntoConstraints = false
         layer.cornerRadius = 10
         backgroundColor = .systemGreen
     }
     
-    // MARK: - Private methods
     private func addSubviews() {
         addSubview(mainView)
     }
 }
 
+// MARK: - Setup constraints
 private extension RootView {
     func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -44,8 +45,8 @@ private extension RootView {
             mainView.centerYAnchor.constraint(equalTo: centerYAnchor),
             mainView.centerXAnchor.constraint(equalTo: centerXAnchor),
             
-            topAnchor.constraint(equalTo: mainView.topAnchor, constant: -50),
-            bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 50)
+            topAnchor.constraint(equalTo: mainView.topAnchor, constant: -100),
+            bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 100)
         ])
     }
 }

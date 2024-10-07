@@ -9,6 +9,9 @@ import UIKit
 
 final class MainView: UIView {
     
+    weak var delegate: MainViewDelegate?
+    var closure: (()->())?
+    
     // MARK: - UI
     private lazy var blueDelegateButton = createCustomButton(title: "Blue Delegate")
     private lazy var cyanResponderChainButton = createCustomButton(title: "Cyan Responder Chain")
@@ -19,6 +22,7 @@ final class MainView: UIView {
         super.init(frame: frame)
         addSubviews()
         setupView()
+        setupButton()
         setupConstraints()
     }
     
@@ -43,12 +47,45 @@ final class MainView: UIView {
         backgroundColor = .systemYellow
     }
     
+    private func setupButton() {
+        cyanResponderChainButton.addTarget(
+            self,
+            action: #selector(changeColorWithResponderChain),
+            for: .touchUpInside
+        )
+        
+        grayClosureButton.addTarget(
+            self,
+            action: #selector(changeColorWithClosure),
+            for: .touchUpInside
+        )
+        
+        blueDelegateButton.addTarget(
+            self,
+            action: #selector(changeColorWithDelegate),
+            for: .touchUpInside
+        )
+    }
+    
     private func addSubviews() {
         [
             blueDelegateButton,
             cyanResponderChainButton,
             grayClosureButton
         ].forEach { addSubview($0) }
+    }
+    
+    // MARK: - Actions
+    @objc private func changeColorWithDelegate() {
+        delegate?.changeColor()
+    }
+    
+    @objc private func changeColorWithClosure() {
+        closure?()
+    }
+    
+    @objc private func changeColorWithResponderChain() {
+        UIApplication.shared.sendAction(#selector(ViewController.changeColorResponder), to: nil, from: self, for: nil)
     }
 }
 
@@ -70,7 +107,7 @@ private extension MainView {
             grayClosureButton.topAnchor.constraint(equalTo: cyanResponderChainButton.bottomAnchor, constant: 8),
             grayClosureButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             
-            heightAnchor.constraint(equalToConstant: 300)
+            heightAnchor.constraint(equalToConstant: 350)
         ])
     }
 }

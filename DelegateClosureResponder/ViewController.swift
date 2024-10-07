@@ -7,19 +7,20 @@
 
 import UIKit
 
-protocol ChangeColorProtocol: AnyObject {
-    func changeColor(_ color: UIColor)
-}
-
 final class ViewController: UIViewController {
-    
-    weak var delegate: ChangeColorProtocol?
-    lazy var closure = { [weak self] in
-        self?.view.backgroundColor = .systemGray
-    }
-    
+        
     // MARK: - UI
     private let rootView = RootView()
+    private lazy var resetButton: UIButton = {
+        let button = UIButton(configuration: .borderedProminent())
+        button.setTitle("Reset background color", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 10
+        button.tintColor = UIColor.systemPink
+        button.addTarget(self, action: #selector(didTapResetButton), for: .touchUpInside)
+        return button
+    }()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -28,67 +29,42 @@ final class ViewController: UIViewController {
         setupView()
         setupConstraints()
         
-        delegate = self
+        rootView.mainView.delegate = self
+        rootView.mainView.closure = changeBackgroundColorWithClosure
     }
     
     // MARK: - Setup Views
     private func addSubviews() {
-        view.addSubview(rootView)
+        [rootView, resetButton].forEach { view.addSubview($0) }
     }
     
     private func setupView() {
         view.backgroundColor = .white
-//        blueDelegateButton.addTarget(
-//            self,
-//            action: #selector(changeColorWithDelegate),
-//            for: .touchUpInside
-//        )
-//        cyanResponderChainButton.addTarget(
-//            self,
-//            action: #selector(changeColorWithResponderChain),
-//            for: .touchUpInside
-//        )
-//        grayClosureButton.addTarget(
-//            self,
-//            action: #selector(changeColorWithClosure),
-//            for: .touchUpInside
-//        )
     }
     
     // MARK: - Actions
-//    @objc private func changeColorWithDelegate() {
-//        delegate?.changeColor(.systemBlue)
-//    }
-//    
-//    @objc private func changeColorWithClosure() {
-//        closure()
-//    }
-//    
-//    @objc private func changeColorWithResponderChain() {
-//        view.next?.changeColor()
-//    }
-}
-
-// MARK: - ChangeColorProtocol
-extension ViewController: ChangeColorProtocol {
-    func changeColor(_ color: UIColor) {
-        view.backgroundColor = color
+    @objc private func didTapResetButton() {
+        changeBackground(with: .white)
+    }
+    
+    private func changeBackgroundColorWithClosure() {
+        changeBackground(with: .systemGray)
+    }
+    
+    // MARK: - Private methods
+    private func changeBackground(with color: UIColor) {
+        UIView.animate(withDuration: 0.3) {
+            self.view.backgroundColor = color
+        }
     }
 }
 
-//// MARK: - UIResponder Extension
-//extension UIResponder {
-//    @objc func changeColor() {
-//        self.next?.changeColor()
-//    }
-//}
-//
-//// MARK: - UIView Extension
-//extension UIViewController {
-//    override func changeColor() {
-//        self.view.backgroundColor = .systemCyan
-//    }
-//}
+// MARK: - MainViewDelegate
+extension ViewController: MainViewDelegate {
+    func changeColor() {
+        changeBackground(with: .systemBlue)
+    }
+}
 
 // MARK: - Setup Constraints
 private extension ViewController {
@@ -98,6 +74,9 @@ private extension ViewController {
             rootView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             rootView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             rootView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            resetButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            resetButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -25)
         ])
     }
 }
