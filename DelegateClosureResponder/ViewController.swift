@@ -10,6 +10,7 @@ import UIKit
 final class ViewController: UIViewController {
         
     var closure: (() -> ())?
+    weak var rootDelegate: RootViewDelegate?
     
     // MARK: - UI
     private let rootView = RootView()
@@ -32,6 +33,7 @@ final class ViewController: UIViewController {
         setupConstraints()
         
         changeBackgroundColorWithClosure()
+        rootView.rootDelegate = self
     }
     
     // MARK: - Setup Views
@@ -65,7 +67,7 @@ final class ViewController: UIViewController {
 }
 
 // MARK: - MainViewDelegate
-extension ViewController: MainViewDelegate {
+extension ViewController: RootViewDelegate {
     func changeColor() {
         changeBackground(with: .systemBlue)
     }

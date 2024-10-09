@@ -10,6 +10,7 @@ import UIKit
 final class RootView: UIView {
     
     var closure: (() -> ())?
+    weak var rootDelegate: RootViewDelegate?
     
     // MARK: - UI
     let mainView = MainView()
@@ -20,6 +21,8 @@ final class RootView: UIView {
         addSubviews()
         setupView()
         setupConstraints()
+        
+        mainView.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -40,6 +43,13 @@ final class RootView: UIView {
     
     private func addSubviews() {
         addSubview(mainView)
+    }
+}
+
+// MARK: MainViewDelegate
+extension RootView: MainViewDelegate {
+    func changeColor() {
+        rootDelegate?.changeColor()
     }
 }
 
