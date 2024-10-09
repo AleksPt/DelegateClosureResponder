@@ -8,7 +8,9 @@
 import UIKit
 
 final class RootView: UIView {
-            
+    
+    var closure: (() -> ())?
+    
     // MARK: - UI
     let mainView = MainView()
     
@@ -22,6 +24,11 @@ final class RootView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError()
+    }
+    
+    // MARK: - Public methods
+    func changeColorWithClosure() {
+        mainView.closure = closure
     }
     
     // MARK: - Private methods

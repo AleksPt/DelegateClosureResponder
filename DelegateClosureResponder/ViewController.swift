@@ -9,6 +9,8 @@ import UIKit
 
 final class ViewController: UIViewController {
         
+    var closure: (() -> ())?
+    
     // MARK: - UI
     private let rootView = RootView()
     private lazy var resetButton: UIButton = {
@@ -29,8 +31,7 @@ final class ViewController: UIViewController {
         setupView()
         setupConstraints()
         
-        rootView.mainView.delegate = self
-        rootView.mainView.closure = changeBackgroundColorWithClosure
+        changeBackgroundColorWithClosure()
     }
     
     // MARK: - Setup Views
@@ -48,7 +49,11 @@ final class ViewController: UIViewController {
     }
     
     private func changeBackgroundColorWithClosure() {
-        changeBackground(with: .systemGray)
+        rootView.closure = { [weak self] in
+            guard let self else { return }
+            changeBackground(with: .systemGray)
+        }
+        rootView.changeColorWithClosure()
     }
     
     // MARK: - Private methods
